@@ -40,7 +40,7 @@ else
 
   desc "Compile MRuby"
   task :mruby => :env do
-    sh("rake")
+    sh("rake --trace")
   end
 
   desc "Compile Main and Create package"

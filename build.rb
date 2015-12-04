@@ -44,15 +44,15 @@ MRuby::Build.new do |conf|
   conf.gem :core => "mruby-bin-strip"
 
   # C compiler settings
-  # conf.cc do |cc|
-  #   cc.command = ENV['CC'] || 'gcc'
-  #   cc.flags = [ENV['CFLAGS'] || %w()]
-  #   cc.include_paths = ["#{root}/include"]
+  conf.cc do |cc|
+    cc.command = ENV['CC'] || 'gcc'
+    cc.flags = [ENV['CFLAGS'] || %w(-std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE)]
+    # cc.include_paths = ["#{root}/include"]
   #   cc.defines = %w(DISABLE_GEMS)
   #   cc.option_include_path = '-I%s'
   #   cc.option_define = '-D%s'
   #   cc.compile_options = "%{flags} -MMD -o %{outfile} -c %{infile}"
-  # end
+  end
 
   # mrbc settings
   # conf.mrbc do |mrbc|
@@ -102,19 +102,53 @@ MRuby::Build.new do |conf|
 end
 
 # Define cross build settings
-MRuby::CrossBuild.new('device') do |conf|
-  conf.define_singleton_method(:host_target) { "" }
+# MRuby::CrossBuild.new('device') do |conf|
+#   toolchain :gcc
+
+#   enable_debug
+
+#   conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
+
+#   if RUBY_PLATFORM =~ /x86_64-linux/i
+#   elsif RUBY_PLATFORM =~ /linux/i
+#     conf.cc.flags << %w(-msse2)
+#     conf.linker.flags << %w(-msse2)
+#   end
+
+#   conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
+# end
+# Define cross build settings
+MRuby::CrossBuild.new('avixy3400') do |conf|
   toolchain :gcc
 
-  enable_debug
+  toolchain_prefix = 'arm-linux-'
+  path_to_toolchain = '/opt/toolchain/usr'
 
-  conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
+  GCC_COMMON_CFLAGS  = %W(-O0 -g3 -Wall -c -fmessage-length=0 -std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE)
+  GCC_COMMON_LDFLAGS = %W(-pthread -std=gnu99)
+  ARCH_CFLAGS  = %W(-DAVX_MODEL=3400)
+  ARCH_LDFLAGS = %W(-DAVX_MODEL=3400)
+  #Remember to add -s to omit symbol information.
 
-  if RUBY_PLATFORM =~ /x86_64-linux/i
-  elsif RUBY_PLATFORM =~ /linux/i
-    conf.cc.flags << %w(-msse2)
-    conf.linker.flags << %w(-msse2)
+  AVIXY_CC = path_to_toolchain + '/bin/' + toolchain_prefix + 'gcc'
+  AVIXY_CXX = path_to_toolchain + '/bin/' + toolchain_prefix + 'g++'
+  AVIXY_LD = path_to_toolchain + '/bin/' + toolchain_prefix + 'gcc'
+  AVIXY_AR = path_to_toolchain + '/bin/' + toolchain_prefix + 'ar'
+  AVIXY_CFLAGS  = GCC_COMMON_CFLAGS  + ARCH_CFLAGS
+  AVIXY_CXXFLAGS  = GCC_COMMON_CFLAGS  + ARCH_CFLAGS
+  AVIXY_LDFLAGS = GCC_COMMON_LDFLAGS + ARCH_LDFLAGS
+
+  [conf.cc, conf.cxx, conf.objc, conf.asm].each do |cc|
+    cc.command = AVIXY_CC
+    cc.flags = AVIXY_CFLAGS
+    cxx.command = AVIXY_CXX
+    cxx.flags = AVIXY_CXXFLAGS
+
+    cc.include_paths = ["#{root}/include"]    
   end
+  conf.linker.command = AVIXY_LD
+  conf.linker.flags = AVIXY_LDFLAGS
+  conf.archiver.command = AVIXY_AR
 
   conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
 end
