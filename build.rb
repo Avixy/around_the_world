@@ -43,15 +43,15 @@ MRuby::Build.new do |conf|
   conf.gem :core => "mruby-bin-strip"
 
   # C compiler settings
-  # conf.cc do |cc|
-  #   cc.command = ENV['CC'] || 'gcc'
-  #   cc.flags = [ENV['CFLAGS'] || %w()]
-  #   cc.include_paths = ["#{root}/include"]
+  conf.cc do |cc|
+    cc.command = ENV['CC'] || 'gcc'
+    cc.flags = [ENV['CFLAGS'] || %w(-std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE)]
+    # cc.include_paths = ["#{root}/include"]
   #   cc.defines = %w(DISABLE_GEMS)
   #   cc.option_include_path = '-I%s'
   #   cc.option_define = '-D%s'
   #   cc.compile_options = "%{flags} -MMD -o %{outfile} -c %{infile}"
-  # end
+  end
 
   # mrbc settings
   # conf.mrbc do |mrbc|
@@ -101,18 +101,18 @@ MRuby::Build.new do |conf|
 end
 
 # Define cross build settings
-MRuby::CrossBuild.new('device') do |conf|
-  toolchain :gcc
+# MRuby::CrossBuild.new('device') do |conf|
+#   toolchain :gcc
 
-  enable_debug
+#   enable_debug
 
-  conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
+#   conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
 
-  if RUBY_PLATFORM =~ /x86_64-linux/i
-  elsif RUBY_PLATFORM =~ /linux/i
-    conf.cc.flags << %w(-msse2)
-    conf.linker.flags << %w(-msse2)
-  end
+#   if RUBY_PLATFORM =~ /x86_64-linux/i
+#   elsif RUBY_PLATFORM =~ /linux/i
+#     conf.cc.flags << %w(-msse2)
+#     conf.linker.flags << %w(-msse2)
+#   end
 
-  conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
-end
+#   conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
+# end
