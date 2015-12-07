@@ -125,7 +125,7 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
   toolchain_prefix = 'arm-linux-'
   path_to_toolchain = '/opt/toolchain/usr'
 
-  GCC_COMMON_CFLAGS  = %W(-O0 -g3 -Wall -c -fmessage-length=0 -std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE)
+  GCC_COMMON_CFLAGS  = %W(-O0 -g3 -Wall -c -fmessage-length=0 -std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE -DAVIXY_DEVICE)
   GCC_COMMON_LDFLAGS = %W(-pthread -std=gnu99)
   ARCH_CFLAGS  = %W(-DAVX_MODEL=3400)
   ARCH_LDFLAGS = %W(-DAVX_MODEL=3400)
@@ -147,6 +147,7 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
 
     cc.include_paths = ["#{root}/include"]    
   end
+
   conf.linker.command = AVIXY_LD
   conf.linker.flags = AVIXY_LDFLAGS
   conf.archiver.command = AVIXY_AR
