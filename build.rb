@@ -116,3 +116,39 @@ end
 
 #   conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
 # end
+
+# Define cross build settings
+MRuby::CrossBuild.new('avixy3400') do |conf|
+  toolchain :gcc
+
+  toolchain_prefix = 'arm-linux-'
+  path_to_toolchain = '/opt/toolchain/usr'
+
+  GCC_COMMON_CFLAGS  = %W(-O0 -g3 -Wall -c -fmessage-length=0 -std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE)
+  GCC_COMMON_LDFLAGS = %W(-pthread -std=gnu99)
+  ARCH_CFLAGS  = %W(-DAVX_MODEL=3400)
+  ARCH_LDFLAGS = %W(-DAVX_MODEL=3400)
+  #Remember to add -s to omit symbol information.
+
+  AVIXY_CC = path_to_toolchain + '/bin/' + toolchain_prefix + 'gcc'
+  AVIXY_CXX = path_to_toolchain + '/bin/' + toolchain_prefix + 'g++'
+  AVIXY_LD = path_to_toolchain + '/bin/' + toolchain_prefix + 'gcc'
+  AVIXY_AR = path_to_toolchain + '/bin/' + toolchain_prefix + 'ar'
+  AVIXY_CFLAGS  = GCC_COMMON_CFLAGS  + ARCH_CFLAGS
+  AVIXY_CXXFLAGS  = GCC_COMMON_CFLAGS  + ARCH_CFLAGS
+  AVIXY_LDFLAGS = GCC_COMMON_LDFLAGS + ARCH_LDFLAGS
+
+  [conf.cc, conf.cxx, conf.objc, conf.asm].each do |cc|
+    cc.command = AVIXY_CC
+    cc.flags = AVIXY_CFLAGS
+    cxx.command = AVIXY_CXX
+    cxx.flags = AVIXY_CXXFLAGS
+
+    cc.include_paths = ["#{root}/include"]    
+  end
+  conf.linker.command = AVIXY_LD
+  conf.linker.flags = AVIXY_LDFLAGS
+  conf.archiver.command = AVIXY_AR
+
+  conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
+end
