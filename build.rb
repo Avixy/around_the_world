@@ -3,6 +3,7 @@ AROUND_MRUBY_ROOT  = File.join(AROUND_ROOT, "mruby")
 AROUND_GEMBOX_ROOT = File.join(AROUND_ROOT, "mrbgems")
 
 MRuby::Build.new do |conf|
+  conf.define_singleton_method(:host_target) { "" }
   # load specific toolchain settings
 
   # Gets set by the VS command prompts.
@@ -25,7 +26,7 @@ MRuby::Build.new do |conf|
 
   # include the default GEMs
   #conf.gembox 'default'
-  
+
   conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
   if RUBY_PLATFORM =~ /x86_64-linux/i
   elsif RUBY_PLATFORM =~ /linux/i
@@ -101,24 +102,8 @@ MRuby::Build.new do |conf|
 end
 
 # Define cross build settings
-# MRuby::CrossBuild.new('device') do |conf|
-#   toolchain :gcc
-
-#   enable_debug
-
-#   conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
-
-#   if RUBY_PLATFORM =~ /x86_64-linux/i
-#   elsif RUBY_PLATFORM =~ /linux/i
-#     conf.cc.flags << %w(-msse2)
-#     conf.linker.flags << %w(-msse2)
-#   end
-
-#   conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
-# end
-
-# Define cross build settings
 MRuby::CrossBuild.new('avixy3400') do |conf|
+  conf.define_singleton_method(:host_target) { "" }
   toolchain :gcc
 
   toolchain_prefix = 'arm-linux-'
