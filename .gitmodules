@@ -1,6 +1,6 @@
 [submodule "mruby"]
 	path = mruby
-	url = git@github.com:chasonr/mruby.git
+	url = git@github.com:Avixy/mruby.git
 [submodule "mrbgems/mruby-polarssl"]
 	path = mrbgems/mruby-polarssl
 	url = git@github.com:luisbebop/mruby-polarssl.git
@@ -15,7 +15,7 @@
 	url = git@github.com:sadasant/mruby-qrcode.git
 [submodule "mrbgems/mruby-socket"]
 	path = mrbgems/mruby-socket
-	url = git@github.com:iij/mruby-socket.git
+	url = git@github.com:Avixy/mruby-socket.git
 [submodule "mrbgems/mruby-sleep"]
 	path = mrbgems/mruby-sleep
 	url = git@github.com:matsumoto-r/mruby-sleep.git
@@ -39,13 +39,13 @@
 	url = git@github.com:masamitsu-murase/mruby-hs-regexp.git
 [submodule "mrbgems/mruby-io"]
 	path = mrbgems/mruby-io
-	url = git@github.com:iij/mruby-io.git
+	url = git@github.com:Avixy/mruby-io.git
 [submodule "mrbgems/mruby-msgpack"]
 	path = mrbgems/mruby-msgpack
 	url = git@github.com:scalone/mruby-msgpack.git
 [submodule "mrbgems/mruby-cloudwalk-platform"]
 	path = mrbgems/mruby-cloudwalk-platform
-	url = git@github.com:cloudwalkio/mruby-cloudwalk-platform.git
+	url = git@github.com:Avixy/mruby-cloudwalk-platform.git
 [submodule "mrbgems/mruby-context"]
 	path = mrbgems/mruby-context
 	url = git@github.com:scalone/mruby-context.git
