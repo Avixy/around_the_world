@@ -26,7 +26,7 @@ MRuby::Build.new do |conf|
 
   # include the default GEMs
   #conf.gembox 'default'
-  conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
+  
   conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
   if RUBY_PLATFORM =~ /x86_64-linux/i
   elsif RUBY_PLATFORM =~ /linux/i
@@ -142,12 +142,13 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
   [conf.cc, conf.cxx, conf.objc, conf.asm].each do |cc|
     cc.command = AVIXY_CC
     cc.flags = AVIXY_CFLAGS
-    cxx.command = AVIXY_CXX
-    cxx.flags = AVIXY_CXXFLAGS
+    # cxx.command = AVIXY_CXX
+    # cxx.flags = AVIXY_CXXFLAGS
 
     cc.include_paths = ["#{root}/include"]    
   end
 
+  conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
   conf.linker.command = AVIXY_LD
   conf.linker.flags = AVIXY_LDFLAGS
   conf.archiver.command = AVIXY_AR
