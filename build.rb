@@ -119,7 +119,7 @@ end
 # end
 
 # Define cross build settings
-MRuby::CrossBuild.new('avixy3400') do |conf|
+MRuby::CrossBuild.new('avixy4000') do |conf|
   toolchain :gcc
 
   toolchain_prefix = 'arm-linux-'
@@ -152,7 +152,7 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
     cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/gprs/inc"
     cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/wifi/inc"
     cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/ethernet/inc"
-    cc.include_paths << "#{AVIXY_SDK_WORKSPACE}/avixy/4000/include"
+    cc.include_paths << "#{AVIXY_SDK_WORKSPACE}/avixy/avx4000/include"
   end
 
   conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING) 
@@ -161,11 +161,15 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
   conf.archiver.command = AVIXY_AR
 
   conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/avixy/SharedLib"    
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/core/SharedLib"
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/fonts/SharedLib"
   conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/network/SharedLib"    
   conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/gprs/SharedLib"
   conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/wifi/SharedLib"
   conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/ethernet/SharedLib"
-  conf.linker.libraries << 'avixy'  
+  conf.linker.libraries << 'avixy'
+  conf.linker.libraries << 'core'  
+  conf.linker.libraries << 'fonts'
   conf.linker.libraries << 'network'  
   conf.linker.libraries << 'gprs'  
   conf.linker.libraries << 'wifi'  
