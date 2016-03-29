@@ -127,8 +127,8 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
 
   GCC_COMMON_CFLAGS  = %W(-O0 -g3 -Wall -c -fmessage-length=0 -std=gnu99 -D_POSIX_C_SOURCE=200112L -D_GNU_SOURCE -DAVIXY_DEVICE)
   GCC_COMMON_LDFLAGS = %W(-pthread -std=gnu99)
-  ARCH_CFLAGS  = %W(-DAVX_MODEL=3400)
-  ARCH_LDFLAGS = %W(-DAVX_MODEL=3400)
+  ARCH_CFLAGS  = %W(-DAVX_MODEL=4000)
+  ARCH_LDFLAGS = %W(-DAVX_MODEL=4000)
   #Remember to add -s to omit symbol information.
 
   AVIXY_CC = path_to_toolchain + '/bin/' + toolchain_prefix + 'gcc'
@@ -138,20 +138,38 @@ MRuby::CrossBuild.new('avixy3400') do |conf|
   AVIXY_CFLAGS  = GCC_COMMON_CFLAGS  + ARCH_CFLAGS
   AVIXY_CXXFLAGS  = GCC_COMMON_CFLAGS  + ARCH_CFLAGS
   AVIXY_LDFLAGS = GCC_COMMON_LDFLAGS + ARCH_LDFLAGS
+  AVIXY_SDK_WORKSPACE = "#{ENV['SDK_WORKSPACE_PATH']}"
+  AVIXY_LIBRARIES_PATH = "#{AVIXY_SDK_WORKSPACE}/libraries"
 
   [conf.cc, conf.cxx, conf.objc, conf.asm].each do |cc|
     cc.command = AVIXY_CC
     cc.flags = AVIXY_CFLAGS
-    # cxx.command = AVIXY_CXX
-    # cxx.flags = AVIXY_CXXFLAGS
-
-    cc.include_paths = ["#{root}/include"]    
+    cc.include_paths = ["#{root}/include"]
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/core/inc" 
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/avixy/inc" 
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/magcard/inc"
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/network/inc"
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/gprs/inc"
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/wifi/inc"
+    cc.include_paths << "#{AVIXY_LIBRARIES_PATH}/ethernet/inc"
+    cc.include_paths << "#{AVIXY_SDK_WORKSPACE}/avixy/4000/include"
   end
 
-  conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING)
+  conf.cc.defines << %w(SHA256_DIGEST_LENGTH=32 SHA512_DIGEST_LENGTH=64 MRB_STACK_EXTEND_DOUBLING) 
   conf.linker.command = AVIXY_LD
   conf.linker.flags = AVIXY_LDFLAGS
   conf.archiver.command = AVIXY_AR
+
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/avixy/SharedLib"    
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/network/SharedLib"    
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/gprs/SharedLib"
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/wifi/SharedLib"
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/ethernet/SharedLib"
+  conf.linker.libraries << 'avixy'  
+  conf.linker.libraries << 'network'  
+  conf.linker.libraries << 'gprs'  
+  conf.linker.libraries << 'wifi'  
+  conf.linker.libraries << 'ethernet'
 
   conf.gembox File.join(AROUND_ROOT, "mrbgems", "around")
 end
