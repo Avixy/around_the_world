@@ -160,13 +160,7 @@ MRuby::CrossBuild.new('avixy4000') do |conf|
   conf.linker.flags = AVIXY_LDFLAGS
   conf.archiver.command = AVIXY_AR
 
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/avixy/SharedLib"    
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/core/SharedLib"
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/fonts/SharedLib"
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/network/SharedLib"    
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/gprs/SharedLib"
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/wifi/SharedLib"
-  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/libraries/ethernet/SharedLib"
+  conf.linker.library_paths << "#{AVIXY_SDK_WORKSPACE}/usr/lib"    
   conf.linker.libraries << 'avixy'
   conf.linker.libraries << 'core'  
   conf.linker.libraries << 'fonts'
